@@ -80,7 +80,7 @@ d3.json("data/revenues.json").then(function(data) {
         var newData = flag ? data : data.slice(1);
         update(newData)
         flag = !flag
-    }, 1000);
+    }, 2000);
     // Run the vis for the first time
     update(data);
 });
