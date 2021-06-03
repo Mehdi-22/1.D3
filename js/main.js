@@ -86,7 +86,13 @@ d3.json("data/revenues.json").then(function(data) {
 });
 
 
+
+
+
 function update(data) {
+
+    var myColor = d3.scaleOrdinal().domain(data)
+        .range(["gold", "blue", "darkgreen", "pink", "brown", "slateblue", "grey1", "orange"]);
 
     var value = flag ? "revenue" : "profit";
 
@@ -154,7 +160,7 @@ function update(data) {
         .attr("width", x.bandwidth)
         //AND UPDATE old elements present in new data.
         .merge(rects)
-        .attr("fill", "grey")
+        .attr("fill", function(d) { return myColor(d.month) })
         .attr("y", y(0))
         .attr("height", 0)
         .transition(t)
