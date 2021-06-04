@@ -17,6 +17,9 @@ var flag = true;
 
 var t = d3.transition().duration(750);
 
+
+
+
 var g = d3.select("#chart-area")
     .append("svg")
     .attr("width", width + margin.left + margin.right)
@@ -24,6 +27,7 @@ var g = d3.select("#chart-area")
     .append("g")
     .attr("transform",
         "translate(" + margin.left + "," + margin.top + ")");
+
 
 var xAxisGroup = g.append("g")
     .attr("class", "x axis")
@@ -90,6 +94,23 @@ d3.json("data/revenues.json").then(function(data) {
 
 
 function update(data) {
+
+    // Tooltip
+    var tip = d3.tip().attr('class', 'd3-tip')
+        .html(function(d) {
+            var text;
+            if (yLabel.text() == "Revenue") {
+                var text = "<strong>Month:</strong> <span style='color:red'>" + d.month + "</span><br>";
+                text += "<strong>Revenue:</strong> <span style='color:red;text-transform:capitalize'>" + d.revenue + "</span><br>";
+            } else {
+                text = "<strong>Month:</strong> <span style='color:red'>" + d.month + "</span><br>";
+
+                text += "<strong>Profit:</strong> <span style='color:red'>" + d.profit + "</span><br>";
+            }
+            return text;
+        });
+    g.call(tip);
+
 
     var myColor = d3.scaleOrdinal().domain(data)
         .range(["gold", "blue", "darkgreen", "pink", "brown", "slateblue", "grey1", "orange"]);
@@ -159,6 +180,8 @@ function update(data) {
         })
         .attr("width", x.bandwidth)
         //AND UPDATE old elements present in new data.
+        .on("mouseover", tip.show)
+        .on("mouseout", tip.hide)
         .merge(rects)
         .attr("fill", function(d) { return myColor(d.month) })
         .attr("y", y(0))
